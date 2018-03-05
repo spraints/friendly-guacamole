@@ -10,13 +10,14 @@ import (
 	"google.golang.org/grpc/metadata"
 
 	"github.com/spraints/friendly-guacamole/p"
+	"github.com/spraints/friendly-guacamole/defaults"
 )
 
 func main() {
 	log.SetPrefix("[server] ")
 	var server server
 	pflag.IntVarP(&server.timeout, "timeout", "t", 1, "amount of time to allow for each job")
-	address := "127.0.0.1:55533"
+	address := defaults.ServerAddr
 	pflag.StringVarP(&address, "address", "a", address, "server to listen on (default "+address+")")
 	pflag.Parse()
 

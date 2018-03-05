@@ -11,13 +11,14 @@ import (
 	"google.golang.org/grpc/metadata"
 
 	"github.com/spraints/friendly-guacamole/p"
+	"github.com/spraints/friendly-guacamole/defaults"
 )
 
 func main() {
 	log.SetPrefix("[client] ")
 	var work int32
 	pflag.Int32VarP(&work, "work", "s", work, "amount of time to sleep in the job")
-	server := "127.0.0.1:55533"
+	server := defaults.ServerAddr
 	pflag.StringVarP(&server, "server", "a", server, "server to connect to (default "+server+")")
 	pflag.Parse()
 
