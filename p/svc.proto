@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package svc;
+
+service Example {
+	rpc DoSomeWork (WorkRequest) returns (WorkResponse);
+}
+
+message WorkRequest {
+	int32 amount = 1;
+}
+
+message WorkResponse {
+	string ack = 1;
+}
