@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package svc;
+package p;
 
 service Example {
 	rpc DoSomeWork (WorkRequest) returns (WorkResponse);

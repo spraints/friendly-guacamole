@@ -9,7 +9,7 @@ import (
 func main() {
 	log.SetPrefix("[server] ")
 	var timeout int
-	pflag.IntVarP(&timeout, "timeout", "t", 10, "amount of time to allow for each job")
+	pflag.IntVarP(&timeout, "timeout", "t", 1, "amount of time to allow for each job")
 	pflag.Parse()
 	log.Printf("todo")
 }

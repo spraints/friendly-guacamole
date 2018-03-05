@@ -2,19 +2,31 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"github.com/spf13/pflag"
+	"google.golang.org/grpc"
+
+	"github.com/spraints/friendly-guacamole/p"
 )
 
 func main() {
 	log.SetPrefix("[client] ")
-	var work int
-	pflag.IntVarP(&work, "work", "s", 0, "amount of time to sleep in the job")
+	work := 0
+	pflag.IntVarP(&work, "work", "s", work, "amount of time to sleep in the job")
+	server := "127.0.0.1:55533"
+	pflag.StringVarP(&server, "server", "a", server, "server to connect to (default "+server+")")
 	pflag.Parse()
-	if work == 0 {
-		pflag.Usage()
-		os.Exit(1)
+
+	grpc, err := grpc.Dial(server, grpc.WithInsecure())
+	perr(err)
+	defer grpc.Close()
+	client := p.NewExampleClient(grpc)
+	perr(err)
+	log.Printf("todo: use %v", client)
+}
+
+func perr(err error) {
+	if err != nil {
+		log.Fatal(err.Error())
 	}
-	log.Printf("todo")
 }
