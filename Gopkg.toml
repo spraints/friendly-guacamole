@@ -1,0 +1,9 @@
+ [prune]
+   non-go = true
+   go-tests = true
+   unused-packages = true
+
+
+[[constraint]]
+  name = "github.com/spf13/pflag"
+  version = "1.0.0"
