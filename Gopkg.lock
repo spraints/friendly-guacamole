@@ -14,6 +14,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/mwitkow/grpc-proxy"
+  packages = ["proxy"]
+  revision = "67591eb23c48346a480470e462289835d96f70da"
+
+[[projects]]
   name = "github.com/spf13/pflag"
   packages = ["."]
   revision = "e57e3eeb33f795204c1ca35f56c44f83227c6e66"
@@ -93,6 +99,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "574e0b7635a148488f03af7eecbdbfe9a7a74bf646bcaa1dc8cf09f5d0906efc"
+  inputs-digest = "f077ccfddb697c38aaf1d98c5e32d1197f58a2e70a89217fe9d167b9eb7b88af"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -31,7 +31,7 @@ func main() {
 	reqID := fmt.Sprintf("req-%d", time.Now().Unix())
 	ctx := context.Background()
 	ctx = metadata.AppendToOutgoingContext(ctx,
-		"request-id", reqID,
+		defaults.RequestIDKey, reqID,
 	)
 	log.Printf("sending request %q...", reqID)
 	res, err := client.DoSomeWork(ctx, &p.WorkRequest{Amount:work})
