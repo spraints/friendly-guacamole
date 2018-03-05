@@ -27,10 +27,12 @@ func main() {
 	client := p.NewExampleClient(conn)
 	perr(err)
 
+	reqID := fmt.Sprintf("req-%d", time.Now().Unix())
 	ctx := context.Background()
 	ctx = metadata.AppendToOutgoingContext(ctx,
-		"request-id", fmt.Sprintf("req-%d", time.Now().Unix()),
+		"request-id", reqID,
 	)
+	log.Printf("sending request %q...", reqID)
 	res, err := client.DoSomeWork(ctx, &p.WorkRequest{Amount:work})
 	log.Printf("res: %#v", res)
 	if err != nil {

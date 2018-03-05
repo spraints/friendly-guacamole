@@ -10,7 +10,8 @@ prereq() {
 prereq go get github.com/golang/protobuf/protoc-gen-go
 prereq protoc p/svc.proto --go_out=plugins=grpc:.
 
-go run server.go &
+go build -o server server.go
+./server &
 trap "kill -TERM $!" EXIT
 sleep 1
 go run client.go "$@"
