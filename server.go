@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"time"
 
 	"github.com/spf13/pflag"
 	"google.golang.org/grpc"
@@ -43,6 +44,7 @@ func (s *server) DoSomeWork(ctx context.Context, req *p.WorkRequest) (*p.WorkRes
 		}
 	}
 	log.Printf("client (req %q) says: %#v", reqID, req)
+	time.Sleep(time.Duration(req.Amount) * time.Second)
 	return &p.WorkResponse{Ack: "Hi! Everything worked!"}, nil
 }
 
