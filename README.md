@@ -5,3 +5,5 @@ This is a sample proxy server. A client sends an RPC message to the server. The 
 * `go run server.go` starts a GRPC server.
 
 * `go run client.go` sends a request to the server. When you run it without args, it will show you the available options.
+
+Or just `./go -s 20`.
