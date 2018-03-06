@@ -17,11 +17,12 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
 	if len(os.Args) != 2 {
 		log.Fatalf("Usage: ./realserver SOCKFILE")
 	}
 	address := os.Args[1]
-	log.SetPrefix("["+address+"] ")
+	log.SetPrefix("[realserver] ["+address+"] ")
 
 	grpcServer := grpc.NewServer()
 	p.RegisterExampleServer(grpcServer, &server{})
@@ -35,6 +36,7 @@ func main() {
 	listener, err := net.Listen("unix", address)
 	perr(err)
 	defer listener.Close()
+	defer os.Remove(address)
 	log.Printf("running!")
 	err = grpcServer.Serve(listener)
 	perr(err)

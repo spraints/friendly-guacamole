@@ -15,6 +15,7 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
 	log.SetPrefix("[client] ")
 	var work int32
 	pflag.Int32VarP(&work, "work", "s", work, "amount of time to sleep in the job")

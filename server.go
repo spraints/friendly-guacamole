@@ -18,6 +18,7 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
 	log.SetPrefix("[server] ")
 	var server server
 	pflag.IntVarP(&server.timeout, "timeout", "t", 1, "amount of time to allow for each job")
@@ -52,15 +53,12 @@ func (s *server) proxy(ctx context.Context, method string) (context.Context, *gr
 	}
 	reqID := ids[0]
 	log.Printf("proxy %s to %s", reqID, method)
-	showDeadline(ctx, "before")
 	ctx, cancelDl := context.WithTimeout(ctx, time.Duration(2 + s.timeout) * time.Second)
-	showDeadline(ctx, "after")
-	wrappedCancelDl := wrap(cancelDl)
 	sock := reqID + ".sock" // yolo
-	err := runRealServerWithTimeout(ctx, wrappedCancelDl, sock)
+	err := runRealServerWithTimeout(ctx, cancelDl, sock)
 	if err != nil {
 		log.Printf("Error starting realserver: %s", err.Error())
-		wrappedCancelDl()
+		cancelDl()
 		return ctx, nil, err
 	}
 	conn, err := grpc.DialContext(ctx, sock,
@@ -72,26 +70,11 @@ func (s *server) proxy(ctx context.Context, method string) (context.Context, *gr
 	)
 	if err != nil {
 		log.Printf("Error dialing realserver: %s", err.Error())
-		wrappedCancelDl()
+		cancelDl()
 		return ctx, nil, err
 	}
 	log.Printf("returning connection to proxy!")
 	return ctx, conn, nil
-}
-
-func showDeadline(ctx context.Context, label string) {
-	if deadline, ok := ctx.Deadline(); ok {
-		log.Printf("%s: context deadline = %q", label, deadline)
-	} else {
-		log.Printf("%s: no deadline", label)
-	}
-}
-
-func wrap(f context.CancelFunc) context.CancelFunc {
-	return func() {
-		log.Printf("CANCEL REQUEST")
-		f()
-	}
 }
 
 func runRealServerWithTimeout(ctx context.Context, cancel context.CancelFunc, sock string) error {
@@ -114,11 +97,11 @@ func runRealServerWithTimeout(ctx context.Context, cancel context.CancelFunc, so
 			log.Printf("realserver finished (%#v, %s)", v, ok)
 			cancel()
 		case v, ok := <-ctx.Done():
-			log.Printf("timed out (%#v, %s), killing realserver %d", v, ok, cmd.Process.Pid)
+			log.Printf("timed out or request finished (%#v, %s), killing realserver %d", v, ok, cmd.Process.Pid)
 			cmd.Process.Kill()
 		}
 	}(done)
-	time.Sleep(time.Second)
+	time.Sleep(10 * time.Millisecond)
 	return nil
 }
 
