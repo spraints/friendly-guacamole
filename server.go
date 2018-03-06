@@ -52,6 +52,7 @@ func (s *server) proxy(ctx context.Context, method string) (context.Context, *gr
 		return nil, nil, fmt.Errorf("no request-id in request")
 	}
 	reqID := ids[0]
+	ctx = metadata.NewOutgoingContext(ctx, md)
 	log.Printf("proxy %s to %s", reqID, method)
 	ctx, cancelDl := context.WithTimeout(ctx, time.Duration(2 + s.timeout) * time.Second)
 	sock := reqID + ".sock" // yolo
