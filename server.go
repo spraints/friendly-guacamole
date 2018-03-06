@@ -63,9 +63,12 @@ func (s *server) proxy(ctx context.Context, method string) (context.Context, *gr
 		wrappedCancelDl()
 		return ctx, nil, err
 	}
-	conn, err := grpc.DialContext(ctx, "unix://" + sock,
+	conn, err := grpc.DialContext(ctx, sock,
 		grpc.WithCodec(proxy.Codec()),
 		grpc.WithInsecure(),
+		grpc.WithDialer(func(addr string, timeout time.Duration) (net.Conn, error) {
+			return net.DialTimeout("unix", addr, timeout)
+		}),
 	)
 	if err != nil {
 		log.Printf("Error dialing realserver: %s", err.Error())
